@@ -1,47 +1,127 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+
+// Helper function to fetch anime GIF
+async function getAnimeGif(action) {
+    try {
+        const response = await fetch(`https://nekos.best/api/v2/${action}`);
+        const data = await response.json();
+        return data.results[0].url;
+    } catch (error) {
+        console.error(`Error fetching ${action} GIF:`, error);
+        return null;
+    }
+}
 
 const commands = [
     {
         name: 'hug',
         description: 'Give someone a hug',
-        execute(message, args) {
+        async execute(message, args) {
             const target = message.mentions.users.first() || message.author;
             const targetName = target.id === message.author.id ? 'themselves' : target.username;
-            message.reply(`${message.author.username} gives ${targetName} a warm hug!`);
+            
+            const gifUrl = await getAnimeGif('hug');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} gives ${targetName} a warm hug!`)
+                .setColor(0xFF69B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
         }
     },
     {
         name: 'kick',
         description: 'Playfully kick someone',
-        execute(message, args) {
+        async execute(message, args) {
             const target = message.mentions.users.first() || message.author;
             const targetName = target.id === message.author.id ? 'themselves' : target.username;
-            message.reply(`${message.author.username} playfully kicks ${targetName}!`);
+            
+            const gifUrl = await getAnimeGif('slap');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} playfully kicks ${targetName}!`)
+                .setColor(0xFF4500);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
         }
     },
     {
         name: 'punch',
         description: 'Playfully punch someone',
-        execute(message, args) {
+        async execute(message, args) {
             const target = message.mentions.users.first() || message.author;
             const targetName = target.id === message.author.id ? 'themselves' : target.username;
-            message.reply(`${message.author.username} playfully punches ${targetName}!`);
+            
+            const gifUrl = await getAnimeGif('punch');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} playfully punches ${targetName}!`)
+                .setColor(0xDC143C);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
         }
     },
     {
         name: 'kill',
         description: 'Playfully eliminate someone',
-        execute(message, args) {
+        async execute(message, args) {
             const target = message.mentions.users.first() || message.author;
             const targetName = target.id === message.author.id ? 'themselves' : target.username;
-            message.reply(`${message.author.username} playfully eliminates ${targetName} from the game!`);
+            
+            const gifUrl = await getAnimeGif('bite');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} playfully eliminates ${targetName} from the game!`)
+                .setColor(0x8B0000);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
         }
     },
     {
         name: 'happy',
         description: 'Show that you are happy',
-        execute(message, args) {
-            message.reply(`${message.author.username} is feeling very happy today!`);
+        async execute(message, args) {
+            const gifUrl = await getAnimeGif('happy');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} is feeling very happy today!`)
+                .setColor(0xFFD700);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
+        }
+    },
+    {
+        name: 'kiss',
+        description: 'Give someone a kiss',
+        async execute(message, args) {
+            const target = message.mentions.users.first() || message.author;
+            const targetName = target.id === message.author.id ? 'themselves' : target.username;
+            
+            const gifUrl = await getAnimeGif('kiss');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} gives ${targetName} a sweet kiss!`)
+                .setColor(0xFF1493);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
         }
     }
 ];
@@ -58,7 +138,17 @@ const slashCommands = [
         async execute(interaction) {
             const target = interaction.options.getUser('target') || interaction.user;
             const targetName = target.id === interaction.user.id ? 'themselves' : target.username;
-            await interaction.reply(`${interaction.user.username} gives ${targetName} a warm hug!`);
+            
+            const gifUrl = await getAnimeGif('hug');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} gives ${targetName} a warm hug!`)
+                .setColor(0xFF69B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
         }
     },
     {
@@ -72,7 +162,17 @@ const slashCommands = [
         async execute(interaction) {
             const target = interaction.options.getUser('target') || interaction.user;
             const targetName = target.id === interaction.user.id ? 'themselves' : target.username;
-            await interaction.reply(`${interaction.user.username} playfully kicks ${targetName}!`);
+            
+            const gifUrl = await getAnimeGif('slap');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} playfully kicks ${targetName}!`)
+                .setColor(0xFF4500);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
         }
     },
     {
@@ -86,7 +186,17 @@ const slashCommands = [
         async execute(interaction) {
             const target = interaction.options.getUser('target') || interaction.user;
             const targetName = target.id === interaction.user.id ? 'themselves' : target.username;
-            await interaction.reply(`${interaction.user.username} playfully punches ${targetName}!`);
+            
+            const gifUrl = await getAnimeGif('punch');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} playfully punches ${targetName}!`)
+                .setColor(0xDC143C);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
         }
     },
     {
@@ -100,7 +210,17 @@ const slashCommands = [
         async execute(interaction) {
             const target = interaction.options.getUser('target') || interaction.user;
             const targetName = target.id === interaction.user.id ? 'themselves' : target.username;
-            await interaction.reply(`${interaction.user.username} playfully eliminates ${targetName} from the game!`);
+            
+            const gifUrl = await getAnimeGif('bite');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} playfully eliminates ${targetName} from the game!`)
+                .setColor(0x8B0000);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
         }
     },
     {
@@ -108,7 +228,40 @@ const slashCommands = [
             .setName('happy')
             .setDescription('Show that you are happy'),
         async execute(interaction) {
-            await interaction.reply(`${interaction.user.username} is feeling very happy today!`);
+            const gifUrl = await getAnimeGif('happy');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} is feeling very happy today!`)
+                .setColor(0xFFD700);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+        }
+    },
+    {
+        data: new SlashCommandBuilder()
+            .setName('kiss')
+            .setDescription('Give someone a kiss')
+            .addUserOption(option =>
+                option.setName('target')
+                    .setDescription('The user to kiss')
+                    .setRequired(false)),
+        async execute(interaction) {
+            const target = interaction.options.getUser('target') || interaction.user;
+            const targetName = target.id === interaction.user.id ? 'themselves' : target.username;
+            
+            const gifUrl = await getAnimeGif('kiss');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} gives ${targetName} a sweet kiss!`)
+                .setColor(0xFF1493);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
         }
     }
 ];

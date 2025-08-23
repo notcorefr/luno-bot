@@ -60,7 +60,7 @@ const commands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy', inline: false },
+                    { name: 'Fun Commands', value: '`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy\n`!kiss` - Give someone a kiss', inline: false },
                     { name: 'Utility Commands', value: '`!serverinfo` - Get server information\n`!membercount` - Get member count\n`!userinfo` - Get user information\n`!afk` - Mark yourself as AFK', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${message.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )
@@ -141,7 +141,7 @@ const slashCommands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy', inline: false },
+                    { name: 'Fun Commands', value: '`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy\n`/kiss` - Give someone a kiss', inline: false },
                     { name: 'Utility Commands', value: '`/serverinfo` - Get server information\n`/membercount` - Get member count\n`/userinfo` - Get user information\n`/afk` - Mark yourself as AFK', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )

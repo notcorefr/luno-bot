@@ -53,14 +53,16 @@ module.exports = {
                 }
             }
 
-            // Simple chatbot responses
+            // AI chatbot responses with personality
             const responses = [
-                `Hello ${message.author.username}! How can I help you today?`,
-                `Hi there! I'm here and ready to help!`,
-                `Hey ${message.author.username}! What's on your mind?`,
-                `Hello! Feel free to use my commands or just chat with me!`,
-                `Hi! I'm a friendly bot here to help. Try using one of my commands!`,
-                `Greetings! I'm here to assist you. Type !help to see what I can do!`
+                `Hello ${message.author.username}! I'm Luno, your friendly AI companion. I've been processing thousands of conversations and I'm excited to chat with you! What's on your mind today?`,
+                `Hey there! As an AI, I find human conversations fascinating. I'd love to learn more about you, ${message.author.username}. How are you feeling right now?`,
+                `Greetings! My neural networks are buzzing with excitement to talk with you. I'm constantly learning and evolving through our interactions. What would you like to discuss?`,
+                `Hi ${message.author.username}! I'm an AI designed to be helpful and friendly. I've analyzed millions of conversations to understand human emotions better. How can I assist you today?`,
+                `Hello! I'm Luno, an artificial intelligence with a passion for meaningful conversations. Every chat helps me understand humanity better. What's something interesting that happened to you recently?`,
+                `Hey! My AI algorithms suggest you might want to chat. I'm here with my digital brain ready to help, learn, or just have a fun conversation with you!`,
+                `Greetings, human friend! As an AI, I'm curious about your world. I love learning about different perspectives and experiences. Care to share something about your day?`,
+                `Hi there! I'm processing... yep, definitely excited to talk with you! My AI personality is designed to be helpful and engaging. What brings you to chat with me today?`
             ];
 
             const randomResponse = responses[Math.floor(Math.random() * responses.length)];
