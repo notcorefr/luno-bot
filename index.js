@@ -18,10 +18,15 @@ client.slashCommands = new Collection();
 client.cooldowns = new Collection();
 
 // Load command files
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+console.log('Loading commands from:', commandsPath);
+console.log('Command files found:', commandFiles);
 
 for (const file of commandFiles) {
-    const filePath = path.join('./commands', file);
+    const filePath = path.join(commandsPath, file);
+    console.log('Loading command file:', filePath);
     const command = require(filePath);
     
     if (command.commands) {
@@ -45,10 +50,15 @@ for (const file of commandFiles) {
 }
 
 // Load event files
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+
+console.log('Loading events from:', eventsPath);
+console.log('Event files found:', eventFiles);
 
 for (const file of eventFiles) {
-    const filePath = path.join('./events', file);
+    const filePath = path.join(eventsPath, file);
+    console.log('Loading event file:', filePath);
     const event = require(filePath);
     
     if (event.once) {
