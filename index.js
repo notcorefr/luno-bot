@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, REST, Routes, ActivityType, PresenceUpdateStatus } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -93,8 +93,10 @@ async function registerSlashCommands() {
     }
 }
 
-client.once('ready', async () => {
+client.once('ready', async (client) => {
     console.log(`Logged in as ${client.user.tag}!`);
+    client.user.setActivity('Philiix Gooning', { type: ActivityType.Watching});
+    client.user.setStatus(PresenceUpdateStatus.DoNotDisturb);;
     await registerSlashCommands();
 });
 
