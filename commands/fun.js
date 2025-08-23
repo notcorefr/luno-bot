@@ -123,6 +123,71 @@ const commands = [
             
             message.reply({ embeds: [embed] });
         }
+    },
+    {
+        name: 'cry',
+        description: 'Show that you are crying',
+        async execute(message, args) {
+            const gifUrl = await getAnimeGif('cry');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} is crying!`)
+                .setColor(0x4682B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
+        }
+    },
+    {
+        name: 'laugh',
+        description: 'Show that you are laughing',
+        async execute(message, args) {
+            const gifUrl = await getAnimeGif('laugh');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} is laughing out loud!`)
+                .setColor(0xFFD700);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
+        }
+    },
+    {
+        name: 'dance',
+        description: 'Show your dance moves',
+        async execute(message, args) {
+            const gifUrl = await getAnimeGif('dance');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} is showing off their amazing dance moves!`)
+                .setColor(0xFF69B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
+        }
+    },
+    {
+        name: 'twerk',
+        description: 'Show your twerking skills',
+        async execute(message, args) {
+            // Using dance as fallback since twerk might not be available
+            const gifUrl = await getAnimeGif('dance');
+            const embed = new EmbedBuilder()
+                .setDescription(`${message.author.username} is twerking like there's no tomorrow!`)
+                .setColor(0xFF1493);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            message.reply({ embeds: [embed] });
+        }
     }
 ];
 
@@ -255,6 +320,75 @@ const slashCommands = [
             const gifUrl = await getAnimeGif('kiss');
             const embed = new EmbedBuilder()
                 .setDescription(`${interaction.user.username} gives ${targetName} a sweet kiss!`)
+                .setColor(0xFF1493);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+        }
+    },
+    {
+        data: new SlashCommandBuilder()
+            .setName('cry')
+            .setDescription('Show that you are crying'),
+        async execute(interaction) {
+            const gifUrl = await getAnimeGif('cry');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} is crying!`)
+                .setColor(0x4682B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+        }
+    },
+    {
+        data: new SlashCommandBuilder()
+            .setName('laugh')
+            .setDescription('Show that you are laughing'),
+        async execute(interaction) {
+            const gifUrl = await getAnimeGif('laugh');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} is laughing out loud!`)
+                .setColor(0xFFD700);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+        }
+    },
+    {
+        data: new SlashCommandBuilder()
+            .setName('dance')
+            .setDescription('Show your dance moves'),
+        async execute(interaction) {
+            const gifUrl = await getAnimeGif('dance');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} is showing off their amazing dance moves!`)
+                .setColor(0xFF69B4);
+            
+            if (gifUrl) {
+                embed.setImage(gifUrl);
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+        }
+    },
+    {
+        data: new SlashCommandBuilder()
+            .setName('twerk')
+            .setDescription('Show your twerking skills'),
+        async execute(interaction) {
+            // Using dance as fallback since twerk might not be available
+            const gifUrl = await getAnimeGif('dance');
+            const embed = new EmbedBuilder()
+                .setDescription(`${interaction.user.username} is twerking like there's no tomorrow!`)
                 .setColor(0xFF1493);
             
             if (gifUrl) {

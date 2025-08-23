@@ -1,26 +1,72 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+
+// Helper function to determine user status
+function getUserStatus(member) {
+    if (member.permissions.has(PermissionFlagsBits.Administrator)) {
+        return 'Administrator';
+    } else if (member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+        return 'Manager';
+    } else if (member.permissions.has(PermissionFlagsBits.ModerateMembers) || member.permissions.has(PermissionFlagsBits.BanMembers) || member.permissions.has(PermissionFlagsBits.KickMembers)) {
+        return 'Moderator';
+    } else if (member.permissions.has(PermissionFlagsBits.ManageMessages) || member.permissions.has(PermissionFlagsBits.ManageChannels)) {
+        return 'Staff';
+    } else {
+        return 'Member';
+    }
+}
+
+// Helper function to check for dangerous permissions
+function hasDangerousPermissions(member) {
+    const dangerousPerms = [
+        PermissionFlagsBits.Administrator,
+        PermissionFlagsBits.ManageGuild,
+        PermissionFlagsBits.BanMembers,
+        PermissionFlagsBits.KickMembers,
+        PermissionFlagsBits.ManageChannels,
+        PermissionFlagsBits.ManageRoles,
+        PermissionFlagsBits.ManageWebhooks,
+        PermissionFlagsBits.MentionEveryone
+    ];
+    
+    return dangerousPerms.some(perm => member.permissions.has(perm));
+}
 
 const commands = [
     {
         name: 'serverinfo',
+        aliases: ['si'],
         description: 'Get information about the server',
-        execute(message, args) {
+        async execute(message, args) {
             const guild = message.guild;
             const embed = new EmbedBuilder()
-                .setTitle('Server Information')
+                .setTitle(`${guild.name} - Server Information`)
                 .addFields(
                     { name: 'Server Name', value: guild.name, inline: true },
                     { name: 'Member Count', value: guild.memberCount.toString(), inline: true },
-                    { name: 'Created', value: guild.createdAt.toDateString(), inline: true }
+                    { name: 'Created', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:F>`, inline: true },
+                    { name: 'Owner', value: `<@${guild.ownerId}>`, inline: true },
+                    { name: 'Boost Level', value: guild.premiumTier.toString(), inline: true },
+                    { name: 'Boost Count', value: guild.premiumSubscriptionCount?.toString() || '0', inline: true }
                 )
                 .setColor(0x0099FF)
                 .setTimestamp();
+            
+            // Set server icon
+            if (guild.iconURL()) {
+                embed.setThumbnail(guild.iconURL({ dynamic: true, size: 256 }));
+            }
+            
+            // Set server banner
+            if (guild.bannerURL()) {
+                embed.setImage(guild.bannerURL({ dynamic: true, size: 1024 }));
+            }
             
             message.reply({ embeds: [embed] });
         }
     },
     {
         name: 'membercount',
+        aliases: ['mc'],
         description: 'Get the member count of the server',
         execute(message, args) {
             message.reply(`This server has ${message.guild.memberCount} members.`);
@@ -28,25 +74,45 @@ const commands = [
     },
     {
         name: 'userinfo',
+        aliases: ['ui'],
         description: 'Get information about a user',
-        execute(message, args) {
+        async execute(message, args) {
             const target = message.mentions.users.first() || message.author;
             const member = message.guild.members.cache.get(target.id);
             
             const embed = new EmbedBuilder()
-                .setTitle('User Information')
+                .setTitle(`${target.username} - User Information`)
+                .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 256 }))
                 .addFields(
                     { name: 'Username', value: target.username, inline: true },
                     { name: 'User ID', value: target.id, inline: true },
-                    { name: 'Account Created', value: target.createdAt.toDateString(), inline: true }
+                    { name: 'Account Created', value: `<t:${Math.floor(target.createdTimestamp / 1000)}:F>`, inline: true }
                 )
                 .setColor(0x0099FF)
                 .setTimestamp();
             
             if (member) {
+                const userStatus = getUserStatus(member);
+                const hasDangerous = hasDangerousPermissions(member);
+                const roles = member.roles.cache
+                    .filter(role => role.id !== message.guild.id)
+                    .sort((a, b) => b.position - a.position)
+                    .map(role => role.toString())
+                    .slice(0, 10);
+                
                 embed.addFields(
-                    { name: 'Joined Server', value: member.joinedAt.toDateString(), inline: true }
+                    { name: 'Joined Server', value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:F>`, inline: true },
+                    { name: 'Status', value: userStatus, inline: true },
+                    { name: 'Dangerous Permissions', value: hasDangerous ? 'Yes' : 'No', inline: true }
                 );
+                
+                if (roles.length > 0) {
+                    embed.addFields({ 
+                        name: `Roles (${member.roles.cache.size - 1})`, 
+                        value: roles.length === 10 ? roles.join(', ') + '...' : roles.join(', '), 
+                        inline: false 
+                    });
+                }
             }
             
             message.reply({ embeds: [embed] });
@@ -60,8 +126,8 @@ const commands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy\n`!kiss` - Give someone a kiss', inline: false },
-                    { name: 'Utility Commands', value: '`!serverinfo` - Get server information\n`!membercount` - Get member count\n`!userinfo` - Get user information\n`!afk` - Mark yourself as AFK', inline: false },
+                    { name: 'Fun Commands', value: '`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy\n`!kiss` - Give someone a kiss\n`!cry` - Show that you are crying\n`!laugh` - Show that you are laughing\n`!dance` - Show your dance moves\n`!twerk` - Show your twerking skills', inline: false },
+                    { name: 'Utility Commands', value: '`!serverinfo` (`!si`) - Get server information\n`!membercount` (`!mc`) - Get member count\n`!userinfo` (`!ui`) - Get user information\n`!afk` - Mark yourself as AFK', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${message.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )
                 .setColor(0x0099FF)
@@ -81,14 +147,27 @@ const slashCommands = [
         async execute(interaction) {
             const guild = interaction.guild;
             const embed = new EmbedBuilder()
-                .setTitle('Server Information')
+                .setTitle(`${guild.name} - Server Information`)
                 .addFields(
                     { name: 'Server Name', value: guild.name, inline: true },
                     { name: 'Member Count', value: guild.memberCount.toString(), inline: true },
-                    { name: 'Created', value: guild.createdAt.toDateString(), inline: true }
+                    { name: 'Created', value: `<t:${Math.floor(guild.createdTimestamp / 1000)}:F>`, inline: true },
+                    { name: 'Owner', value: `<@${guild.ownerId}>`, inline: true },
+                    { name: 'Boost Level', value: guild.premiumTier.toString(), inline: true },
+                    { name: 'Boost Count', value: guild.premiumSubscriptionCount?.toString() || '0', inline: true }
                 )
                 .setColor(0x0099FF)
                 .setTimestamp();
+            
+            // Set server icon
+            if (guild.iconURL()) {
+                embed.setThumbnail(guild.iconURL({ dynamic: true, size: 256 }));
+            }
+            
+            // Set server banner
+            if (guild.bannerURL()) {
+                embed.setImage(guild.bannerURL({ dynamic: true, size: 1024 }));
+            }
             
             await interaction.reply({ embeds: [embed] });
         }
@@ -114,19 +193,38 @@ const slashCommands = [
             const member = interaction.guild.members.cache.get(target.id);
             
             const embed = new EmbedBuilder()
-                .setTitle('User Information')
+                .setTitle(`${target.username} - User Information`)
+                .setThumbnail(target.displayAvatarURL({ dynamic: true, size: 256 }))
                 .addFields(
                     { name: 'Username', value: target.username, inline: true },
                     { name: 'User ID', value: target.id, inline: true },
-                    { name: 'Account Created', value: target.createdAt.toDateString(), inline: true }
+                    { name: 'Account Created', value: `<t:${Math.floor(target.createdTimestamp / 1000)}:F>`, inline: true }
                 )
                 .setColor(0x0099FF)
                 .setTimestamp();
             
             if (member) {
+                const userStatus = getUserStatus(member);
+                const hasDangerous = hasDangerousPermissions(member);
+                const roles = member.roles.cache
+                    .filter(role => role.id !== interaction.guild.id)
+                    .sort((a, b) => b.position - a.position)
+                    .map(role => role.toString())
+                    .slice(0, 10);
+                
                 embed.addFields(
-                    { name: 'Joined Server', value: member.joinedAt.toDateString(), inline: true }
+                    { name: 'Joined Server', value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:F>`, inline: true },
+                    { name: 'Status', value: userStatus, inline: true },
+                    { name: 'Dangerous Permissions', value: hasDangerous ? 'Yes' : 'No', inline: true }
                 );
+                
+                if (roles.length > 0) {
+                    embed.addFields({ 
+                        name: `Roles (${member.roles.cache.size - 1})`, 
+                        value: roles.length === 10 ? roles.join(', ') + '...' : roles.join(', '), 
+                        inline: false 
+                    });
+                }
             }
             
             await interaction.reply({ embeds: [embed] });
@@ -141,12 +239,12 @@ const slashCommands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy\n`/kiss` - Give someone a kiss', inline: false },
+                    { name: 'Fun Commands', value: '`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy\n`/kiss` - Give someone a kiss\n`/cry` - Show that you are crying\n`/laugh` - Show that you are laughing\n`/dance` - Show your dance moves\n`/twerk` - Show your twerking skills', inline: false },
                     { name: 'Utility Commands', value: '`/serverinfo` - Get server information\n`/membercount` - Get member count\n`/userinfo` - Get user information\n`/afk` - Mark yourself as AFK', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )
                 .setColor(0x0099FF)
-                .setFooter({ text: 'You can also use prefix commands by typing ! before the command name!' })
+                .setFooter({ text: 'You can also use prefix commands with shortcuts: !si, !mc, !ui' })
                 .setTimestamp();
             
             await interaction.reply({ embeds: [embed] });
