@@ -1,6 +1,7 @@
 const { Collection } = require('discord.js');
 const commandHandler = require('../utils/commandHandler');
 const afkManager = require('../utils/afkManager');
+const aiChatbot = require('../utils/aiChatbot');
 
 module.exports = {
     name: 'messageCreate',
@@ -53,20 +54,35 @@ module.exports = {
                 }
             }
 
-            // AI chatbot responses with personality
-            const responses = [
-                `Hello ${message.author.username}! I'm Luno, your friendly AI companion. I've been processing thousands of conversations and I'm excited to chat with you! What's on your mind today?`,
-                `Hey there! As an AI, I find human conversations fascinating. I'd love to learn more about you, ${message.author.username}. How are you feeling right now?`,
-                `Greetings! My neural networks are buzzing with excitement to talk with you. I'm constantly learning and evolving through our interactions. What would you like to discuss?`,
-                `Hi ${message.author.username}! I'm an AI designed to be helpful and friendly. I've analyzed millions of conversations to understand human emotions better. How can I assist you today?`,
-                `Hello! I'm Luno, an artificial intelligence with a passion for meaningful conversations. Every chat helps me understand humanity better. What's something interesting that happened to you recently?`,
-                `Hey! My AI algorithms suggest you might want to chat. I'm here with my digital brain ready to help, learn, or just have a fun conversation with you!`,
-                `Greetings, human friend! As an AI, I'm curious about your world. I love learning about different perspectives and experiences. Care to share something about your day?`,
-                `Hi there! I'm processing... yep, definitely excited to talk with you! My AI personality is designed to be helpful and engaging. What brings you to chat with me today?`
-            ];
-
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            message.reply(randomResponse);
+            // Extract the user's message without mentions
+            let userMessage = message.content
+                .replace(botMention, '')
+                .replace(botMentionNick, '')
+                .trim();
+            
+            // If message is empty after removing mentions, use a default
+            if (!userMessage) {
+                userMessage = "Hello!";
+            }
+            
+            // Show typing indicator
+            message.channel.sendTyping();
+            
+            try {
+                // Generate AI response
+                const aiResponse = await aiChatbot.generateResponse(message, userMessage);
+                message.reply(aiResponse);
+            } catch (error) {
+                console.error('Error with AI chatbot:', error);
+                // Fallback to simple responses if AI fails
+                const fallbackResponses = [
+                    `Hello ${message.author.username}! I'm Luno, your friendly AI companion. How can I help you today?`,
+                    `Hi there! My AI brain is processing your message. What would you like to chat about?`,
+                    `Hey ${message.author.username}! I'm here and ready to have a conversation with you!`
+                ];
+                const randomResponse = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+                message.reply(randomResponse);
+            }
         }
     }
 };
