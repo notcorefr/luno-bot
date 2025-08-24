@@ -135,8 +135,8 @@ const commands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy\n`!kiss` - Give someone a kiss\n`!cry` - Show that you are crying\n`!laugh` - Show that you are laughing\n`!dance` - Show your dance moves\n`!twerk` - Show your twerking skills', inline: false },
-                    { name: 'Utility Commands', value: '`!serverinfo` (`!si`) - Get server information\n`!membercount` (`!mc`) - Get member count\n`!userinfo` (`!ui`) - Get user information\n`!afk` - Mark yourself as AFK\n`!clearchat` - Clear your AI conversation history', inline: false },
+                    { name: 'Fun Commands', value: '`!help` - to view all existing commands\n`!hug` - Give someone a hug\n`!kick` - Playfully kick someone\n`!punch` - Playfully punch someone\n`!kill` - Playfully eliminate someone\n`!happy` - Show that you are happy\n`!kiss` - Give someone a kiss\n`!cry` - Show that you are crying\n`!laugh` - Show that you are laughing\n`!dance` - Show your dance moves\n`!twerk` - Show your twerking skills', inline: false },
+                    { name: 'Utility Commands', value: '`!serverinfo` (`!si`) - Get server information\n`!membercount` (`!mc`) - Get member count\n`!userinfo` (`!ui`) - Get user information\n`!afk` - Mark yourself as AFK\n`!av @user` - to view someones avatar', inline: false },
                     { name: 'AI Chatbot', value: 'Join Our Main Server and look for "Iuno chat" and you can chat with me there :3', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${message.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )
@@ -277,8 +277,8 @@ const slashCommands = [
                 .setTitle('Bot Commands')
                 .setDescription('Here are all the available commands:')
                 .addFields(
-                    { name: 'Fun Commands', value: '`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy\n`/kiss` - Give someone a kiss\n`/cry` - Show that you are crying\n`/laugh` - Show that you are laughing\n`/dance` - Show your dance moves\n`/twerk` - Show your twerking skills', inline: false },
-                    { name: 'Utility Commands', value: '`/serverinfo` - Get server information\n`/membercount` - Get member count\n`/userinfo` - Get user information\n`/afk` - Mark yourself as AFK\n`/clearchat` - Clear your AI conversation history', inline: false },
+                    { name: 'Fun Commands', value: '`/help` - to get all existing commands info\n`/hug` - Give someone a hug\n`/kick` - Playfully kick someone\n`/punch` - Playfully punch someone\n`/kill` - Playfully eliminate someone\n`/happy` - Show that you are happy\n`/kiss` - Give someone a kiss\n`/cry` - Show that you are crying\n`/laugh` - Show that you are laughing\n`/dance` - Show your dance moves\n`/twerk` - Show your twerking skills', inline: false },
+                    { name: 'Utility Commands', value: '`/serverinfo` - Get server information\n`/membercount` - Get member count\n`/userinfo` - Get user information\n`/afk` - Mark yourself as AFK\n', inline: false },
                     { name: 'AI Chatbot', value: 'Mention me or reply to my messages for intelligent AI conversations powered by ChatGPT!', inline: false },
                     { name: 'Invite Bot', value: `[Click here to invite me to your server!](https://discord.com/api/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=268435456&scope=bot%20applications.commands)`, inline: false }
                 )
