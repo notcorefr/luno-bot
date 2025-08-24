@@ -1,7 +1,21 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes, ActivityType, PresenceUpdateStatus } = require('discord.js');
+const express = require('express')
+const app = express()
+const port = 3000
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+
+
+// KEEP ALIVE SERVER
+app.get('/', (req, res) => {
+  res.send({isWorking: true})
+})
+
+app.listen(port, () => {
+  console.log(`Server Startedd on port ${port}`)
+})
+
 
 const client = new Client({
     intents: [
@@ -71,7 +85,7 @@ for (const file of eventFiles) {
 // Register slash commands
 async function registerSlashCommands() {
     const commands = [];
-    
+
     // Collect all slash commands
     client.slashCommands.forEach(command => {
         commands.push(command.data.toJSON());
