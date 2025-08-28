@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes, ActivityType, PresenceUpdateStatus } = require('discord.js');
 const express = require('express')
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
